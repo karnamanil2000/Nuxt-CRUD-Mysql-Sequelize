@@ -1,4 +1,4 @@
-import db from '../../models/index.js';
+import db from '../../../models/index.js';
 
 export default defineEventHandler(async (event) => {
   const form = await readBody(event);

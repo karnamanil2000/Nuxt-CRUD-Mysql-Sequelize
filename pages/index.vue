@@ -1,7 +1,7 @@
 <script setup>
 import { ref, reactive, watchEffect } from 'vue'
 // get posts from api
-const { data: posts, pending, refresh, error  } = await useFetch('/api/posts');
+const { data: posts, pending, refresh, error  } = await useFetch('/api/posts/getPosts');
 
 // reactive form data properties
 const form = reactive({
@@ -35,7 +35,7 @@ async function post(event) {
   }
 
   // post form data to api
-  await $fetch('/api/posts', {
+  await $fetch('/api/posts/addPosts', {
     method: 'POST',
     body: JSON.stringify(form)
   });
@@ -52,19 +52,22 @@ async function select({id, title, content}) {
 
 // Delete post
 async function deletePost(id) {
-  await $fetch(`/api/posts/${id}`, {
+  await $fetch(`/api/posts/deletePosts/${id}`, {
     method: 'DELETE'
   });
   refresh();
 }
-
-
-
-
+// Delete post
+async function View(id) {
+  await $fetch(`/api/posts/posts/${id}`, {
+    method: 'GET'
+  });
+  refresh();
+}
 
 useHead(() => {
   return {
-    title: 'Hello World',
+    title: 'Crud App',
     meta: [
       {
         name: 'description',
@@ -112,6 +115,7 @@ useHead(() => {
             <td>
               <button class="btn btn-primary" @click="select(post)">Edit</button>
               <button class="btn btn-danger ms-3" @click="deletePost(post.id)">Delete</button>
+              <button class="btn btn-success ms-3" @click="View(post.id)">View</button>              
             </td>
           </tr>
         </tbody>
