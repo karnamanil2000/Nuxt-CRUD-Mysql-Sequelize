@@ -3,8 +3,9 @@ import db from '../../../models/index.js';
 export default defineEventHandler(async (event) => {
   const form = await readBody(event);
   const { title, content } = extractTitleAndBody(form.content);
-  return createPost(title, content);
+    return updatePost(form.id, title, content);
 })
+
 
 /**
  * Extract title and body from content.
@@ -20,13 +21,14 @@ function extractTitleAndBody(bodyData) {
 }
 
 /**
- * Create a new post.
- * 
+ * Update a post.
  */
-async function createPost(title, content) {
-  const post = await db.Posts.create({
+async function updatePost(id, title, content) {
+  const post = await db.Posts.update({
     title,
     content,
+  }, {
+    where: { id },
   });
   return post;
 }

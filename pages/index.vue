@@ -34,11 +34,18 @@ async function post(event) {
     return;
   }
 
-  // post form data to api
-  await $fetch('/api/posts/addPosts', {
-    method: 'POST',
-    body: JSON.stringify(form)
-  });
+  if(!update.value) {
+    // post form data to api
+    await $fetch('/api/posts/addPosts', {
+      method: 'POST',
+      body: JSON.stringify(form)
+    });
+  } else {
+    await $fetch('/api/posts/updatePost', {
+      method: 'PUT',
+      body: JSON.stringify(form)
+    });
+  }
   refresh();
   // reset form data
   form.id = '';
@@ -52,17 +59,28 @@ async function select({id, title, content}) {
 
 // Delete post
 async function deletePost(id) {
-  await $fetch(`/api/posts/deletePosts/${id}`, {
-    method: 'DELETE'
-  });
+  let payLoad = { id : id }
+  try {
+    await $fetch(`/api/posts/deletePost`, {
+      method: 'DELETE',
+      body: JSON.stringify(payLoad)
+    });
+  }catch(e) {
+    console.log("Error in delete",e);
+  }
   refresh();
 }
-// Delete post
+// View post by Id
 async function View(id) {
-  await $fetch(`/api/posts/posts/${id}`, {
-    method: 'GET'
-  });
-  refresh();
+  let payLoad = { id : id }
+  try {
+    await $fetch(`/api/posts/getPost`, {
+      method:'GET',
+      body: JSON.stringify(payLoad)
+    });
+  } catch(e) {
+    console.log("error",e);
+  }
 }
 
 useHead(() => {
